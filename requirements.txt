@@ -1,5 +1,12 @@
-scrapy
-beautifulsoup4
-psycopg2-binary
-pandas
-streamlit
+scrapy>=2.11
+beautifulsoup4>=4.12
+scrapy-playwright>=0.0.34
+playwright>=1.43
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+pymysql>=1.1
+pandas>=2.2
+streamlit>=1.33
+fastapi>=0.110
+uvicorn>=0.29
+apscheduler>=3.10

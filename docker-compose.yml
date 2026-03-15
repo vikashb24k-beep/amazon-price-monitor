@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    command: uvicorn api.fastapi_app:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: production
+      SEED_DEMO_DATA: "false"
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/amazon_monitor
+    depends_on:
+      db:
+        condition: service_healthy
+
+  dashboard:
+    build: .
+    command: streamlit run dashboard.py --server.address 0.0.0.0 --server.port 8501
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      APP_ENV: production
+      SEED_DEMO_DATA: "false"
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/amazon_monitor
+    depends_on:
+      db:
+        condition: service_healthy
+
+  scheduler:
+    build: .
+    command: python -m scheduler.scheduler --interval-minutes 30
+    restart: unless-stopped
+    environment:
+      APP_ENV: production
+      SEED_DEMO_DATA: "false"
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/amazon_monitor
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: amazon_monitor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d amazon_monitor"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

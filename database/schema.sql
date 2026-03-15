@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS price_history (
     captured_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX IF NOT EXISTS idx_price_history_product_time ON price_history(product_id, captured_at DESC);
+
 CREATE TABLE IF NOT EXISTS offers (
     id BIGSERIAL PRIMARY KEY,
     product_id INTEGER NOT NULL REFERENCES products(id),
@@ -50,6 +52,8 @@ CREATE TABLE IF NOT EXISTS offers (
     captured_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX IF NOT EXISTS idx_offers_product_time ON offers(product_id, captured_at DESC);
+
 CREATE TABLE IF NOT EXISTS buy_box_history (
     id BIGSERIAL PRIMARY KEY,
     product_id INTEGER NOT NULL REFERENCES products(id),
@@ -58,6 +62,8 @@ CREATE TABLE IF NOT EXISTS buy_box_history (
     price NUMERIC(12,2),
     captured_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_buy_box_history_product_time ON buy_box_history(product_id, captured_at DESC);
 
 CREATE TABLE IF NOT EXISTS alert_events (
     id BIGSERIAL PRIMARY KEY,
