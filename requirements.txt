@@ -1,0 +1,5 @@
+scrapy
+beautifulsoup4
+psycopg2-binary
+pandas
+streamlit
